@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/commandes/', include('apps.commandes.urls')),
     path('api/paiements/', include('apps.paiements.urls')),
     path('api/qrcodes/', include('apps.qrcodes.urls')),
+    path('api/whatsapp/', include('apps.whatsapp.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
