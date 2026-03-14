@@ -10,6 +10,7 @@ import IconArrow from '../components/icons/IconArrow'
 import IconImage from '../components/icons/IconImage'
 import toast from 'react-hot-toast'
 import AdminCataloguePage from './AdminCataloguePage'
+import AdminStatsPage from './AdminStatsPage'
 
 const STATUTS = [
   { val: '',               label: 'Toutes' },
@@ -161,6 +162,7 @@ export default function AdminDashboard() {
             {[
               { val: 'commandes', label: 'Commandes' },
               { val: 'catalogue', label: 'Catalogue' },
+              { val: 'stats', label: 'Statistiques' },
             ].map(o => (
               <button key={o.val} onClick={() => setOnglet(o.val)} style={{
                 background: onglet === o.val ? 'var(--gold-dim)' : 'none',
@@ -199,6 +201,8 @@ export default function AdminDashboard() {
 
       {onglet === 'catalogue' ? (
         <AdminCataloguePage />
+      ) : onglet === 'stats' ? (
+        <AdminStatsPage />
       ) : (
         <div style={{ display: 'flex', flex: 1 }}>
 

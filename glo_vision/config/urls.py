@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from apps.notifications.stats_views import StatsView
 import json
 
 @csrf_exempt
@@ -32,4 +33,6 @@ urlpatterns = [
     path('api/paiements/', include('apps.paiements.urls')),
     path('api/qrcodes/', include('apps.qrcodes.urls')),
     path('api/whatsapp/', include('apps.whatsapp.urls')),
+    path('api/stats/', StatsView.as_view(), name='stats'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

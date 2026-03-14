@@ -26,3 +26,5 @@ export const telechargerPhotos = (code) =>
       a.click()
       window.URL.revokeObjectURL(url)
     })
+
+export const getStats = () => api.get('/stats/')
