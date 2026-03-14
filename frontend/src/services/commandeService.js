@@ -15,3 +15,14 @@ export const updateStatut = (code, statut) =>
 
 export const genererQR  = (code)  => api.post(`/qrcodes/generer/${code}/`)
 export const validerQR  = (token) => api.post('/qrcodes/valider/', { token })
+
+export const telechargerPhotos = (code) =>
+  api.get(`/commandes/admin/${code}/photos/`, { responseType: 'blob' })
+    .then(res => {
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const a   = document.createElement('a')
+      a.href    = url
+      a.download = `photos_${code}.zip`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    })

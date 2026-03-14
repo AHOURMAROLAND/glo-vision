@@ -53,3 +53,41 @@ class CommandeStatutUpdateView(APIView):
         commande.statut = nouveau_statut
         commande.save()
         return Response(CommandeDetailSerializer(commande).data)
+
+
+    from django.http import FileResponse, Http404
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
+import os, zipfile, tempfile
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+
+class TelechargerPhotosCommandeView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, code):
+        try:
+            commande = Commande.objects.get(code=code)
+        except Commande.DoesNotExist:
+            raise Http404
+
+        photos = commande.photos.all()
+        if not photos:
+            return Response({'error': 'Aucune photo'}, status=404)
+
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.zip')
+        with zipfile.ZipFile(tmp.name, 'w') as zf:
+            for i, photo in enumerate(photos):
+                try:
+                    ext = os.path.splitext(photo.image.name)[1] or '.jpg'
+                    zf.write(photo.image.path, f"photo_{i+1}{ext}")
+                except Exception:
+                    pass
+
+        response = FileResponse(
+            open(tmp.name, 'rb'),
+            content_type='application/zip'
+        )
+        response['Content-Disposition'] = f'attachment; filename="photos_{code}.zip"'
+        return response

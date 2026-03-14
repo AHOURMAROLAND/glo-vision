@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/common/Navbar'
+import Footer from './components/common/Footer'
 import HomePage from './pages/HomePage'
 import TableauDetailPage from './pages/TableauDetailPage'
 import PanierPage from './pages/PanierPage'
@@ -29,6 +30,7 @@ export default function App() {
               <Route path="/qr/:token" element={<QRVerifPage />} />
             </Routes>
           </main>
+          <Footer />
         </>
       } />
     </Routes>
