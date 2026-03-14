@@ -12,6 +12,7 @@ def commande_post_save(sender, instance, created, **kwargs):
         msg_recu_final,
     )
     from apps.paiements.recu_generator import generer_recu_avance
+    from apps.notifications.utils import envoyer_notification_admin
     import os
 
     numero_admin = os.getenv('NUMERO_ADMIN_WHATSAPP', '')
@@ -19,6 +20,18 @@ def commande_post_save(sender, instance, created, **kwargs):
     if created:
         if numero_admin:
             envoyer_message(numero_admin, msg_notif_admin(instance))
+
+        envoyer_notification_admin({
+            'type': 'nouvelle_commande',
+            'code': instance.code,
+            'client': instance.nom_client,
+            'whatsapp': instance.numero_whatsapp,
+            'tableau': instance.tableau.titre,
+            'nb_unites': instance.nb_unites,
+            'montant_total': str(instance.montant_total),
+            'montant_avance': str(instance.montant_avance),
+            'statut': instance.statut,
+        })
 
     else:
         if instance.statut == Commande.Statut.PAYEE_AVANCE:
@@ -35,6 +48,14 @@ def commande_post_save(sender, instance, created, **kwargs):
             except Exception as e:
                 print(f"Erreur envoi PDF : {e}")
 
+            envoyer_notification_admin({
+                'type': 'statut_change',
+                'code': instance.code,
+                'client': instance.nom_client,
+                'statut': instance.statut,
+                'message': f"Commande {instance.code} — acompte reçu"
+            })
+
         elif instance.statut == Commande.Statut.PRETE:
             try:
                 qr = instance.qrcode
@@ -43,6 +64,14 @@ def commande_post_save(sender, instance, created, **kwargs):
                 envoyer_message(instance.numero_whatsapp, msg_tableau_pret(instance, qr_url))
             except Exception:
                 pass
+
+            envoyer_notification_admin({
+                'type': 'statut_change',
+                'code': instance.code,
+                'client': instance.nom_client,
+                'statut': instance.statut,
+                'message': f"Commande {instance.code} — tableau prêt"
+            })
 
         elif instance.statut == Commande.Statut.SOLDEE:
             envoyer_message(instance.numero_whatsapp, msg_recu_final(instance))
@@ -57,3 +86,11 @@ def commande_post_save(sender, instance, created, **kwargs):
                 )
             except Exception as e:
                 print(f"Erreur envoi PDF final : {e}")
+
+            envoyer_notification_admin({
+                'type': 'statut_change',
+                'code': instance.code,
+                'client': instance.nom_client,
+                'statut': instance.statut,
+                'message': f"Commande {instance.code} — soldée et clôturée"
+            })

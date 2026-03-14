@@ -127,3 +127,17 @@ PAYDUNYA_TOKEN = os.getenv('PAYDUNYA_TOKEN')
 PAYDUNYA_MODE = os.getenv('PAYDUNYA_MODE', 'test')
 
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:5173')
+
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
+# Ajouter daphne en premier dans INSTALLED_APPS
+INSTALLED_APPS = ['daphne'] + INSTALLED_APPS
+
+ASGI_APPLICATION = 'config.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}
