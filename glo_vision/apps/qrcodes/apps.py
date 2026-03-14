@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
-
 class QrcodesConfig(AppConfig):
-    name = 'qrcodes'
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.qrcodes'
