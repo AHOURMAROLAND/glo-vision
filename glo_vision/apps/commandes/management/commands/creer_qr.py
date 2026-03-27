@@ -13,12 +13,12 @@ class Command(BaseCommand):
     help = 'Créer un QR code pour une commande'
 
     def handle(self, *args, **options):
-        self.stdout.write('📱 Création QR code...')
+        self.stdout.write('[QR] Creation QR code...')
         
         # Récupérer tableau existant
         tableau = Tableau.objects.first()
         if not tableau:
-            self.stdout.write(self.style.ERROR('❌ Aucun tableau trouvé'))
+            self.stdout.write(self.style.ERROR('[ERR] Aucun tableau trouve'))
             return
         
         # Créer commande
@@ -42,8 +42,8 @@ class Command(BaseCommand):
             utilise=False
         )
         
-        self.stdout.write(self.style.SUCCESS(f'✅ QR Code créé: {qr_code.token}'))
-        self.stdout.write(f'📱 URL: http://localhost:5173/qr/{qr_code.token}')
-        self.stdout.write(f'📦 Commande: {commande.code}')
-        self.stdout.write(f'👤 Client: {commande.nom_client}')
-        self.stdout.write(f'🎨 Tableau: {commande.tableau.titre}')
+        self.stdout.write(self.style.SUCCESS(f'[OK] QR Code cree: {qr_code.token}'))
+        self.stdout.write(f'[URL] URL: http://localhost:5173/qr/{qr_code.token}')
+        self.stdout.write(f'[CMD] Commande: {commande.code}')
+        self.stdout.write(f'[CLIENT] Client: {commande.nom_client}')
+        self.stdout.write(f'[TABLEAU] Tableau: {commande.tableau.titre}')

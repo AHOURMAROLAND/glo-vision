@@ -19,12 +19,12 @@ class Command(BaseCommand):
     help = 'Afficher un QR code dans le terminal'
 
     def handle(self, *args, **options):
-        self.stdout.write('📱 Génération QR Code terminal...')
+        self.stdout.write('[QR] Generation QR Code terminal...')
         
         # Récupérer tableau existant
         tableau = Tableau.objects.first()
         if not tableau:
-            self.stdout.write(self.style.ERROR('❌ Aucun tableau trouvé'))
+            self.stdout.write(self.style.ERROR('[ERR] Aucun tableau trouve'))
             return
         
         # Créer commande
@@ -67,7 +67,7 @@ class Command(BaseCommand):
         
         # Afficher le QR code en ASCII
         self.stdout.write('\n' + '='*60)
-        self.stdout.write(self.style.SUCCESS('📱 QR CODE À SCANNER'))
+        self.stdout.write(self.style.SUCCESS('[QR] QR CODE A SCANNER'))
         self.stdout.write('='*60)
         
         # Version simple ASCII
@@ -95,25 +95,25 @@ class Command(BaseCommand):
         self.stdout.write(qr_ascii)
         
         self.stdout.write('\n' + '='*60)
-        self.stdout.write(self.style.SUCCESS('📋 INFORMATIONS'))
+        self.stdout.write(self.style.SUCCESS('[INFO] INFORMATIONS'))
         self.stdout.write('='*60)
-        self.stdout.write(f'🔗 URL: http://localhost:5175/qr/{qr_code.token}')
-        self.stdout.write(f'📦 Commande: {commande.code}')
-        self.stdout.write(f'👤 Client: {commande.nom_client}')
-        self.stdout.write(f'🎨 Tableau: {commande.tableau.titre}')
-        self.stdout.write(f'💰 Total: {commande.montant_total} FCFA')
-        self.stdout.write(f'📱 Image: qr_terminal_{str(qr_code.token)[:8]}.png')
+        self.stdout.write(f'[URL] URL: http://localhost:5175/qr/{qr_code.token}')
+        self.stdout.write(f'[CMD] Commande: {commande.code}')
+        self.stdout.write(f'[CLIENT] Client: {commande.nom_client}')
+        self.stdout.write(f'[TABLEAU] Tableau: {commande.tableau.titre}')
+        self.stdout.write(f'[MONTANT] Total: {commande.montant_total} FCFA')
+        self.stdout.write(f'[IMAGE] Image: qr_terminal_{str(qr_code.token)[:8]}.png')
         self.stdout.write('='*60)
         
         # Test API
-        self.stdout.write('\n🔍 Test API...')
+        self.stdout.write('\n[API] Test API...')
         import requests
         try:
             response = requests.get(f'http://localhost:8000/api/qrcodes/verifier/{qr_code.token}/')
             if response.status_code == 200:
                 data = response.json()
-                self.stdout.write(self.style.SUCCESS(f'✅ API valide: {data}'))
+                self.stdout.write(self.style.SUCCESS(f'[OK] API valide: {data}'))
             else:
-                self.stdout.write(self.style.ERROR(f'❌ API erreur: {response.status_code}'))
+                self.stdout.write(self.style.ERROR(f'[ERR] API erreur: {response.status_code}'))
         except Exception as e:
-            self.stdout.write(self.style.ERROR(f'❌ API exception: {e}'))
+            self.stdout.write(self.style.ERROR(f'[ERR] API exception: {e}'))

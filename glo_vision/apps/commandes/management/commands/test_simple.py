@@ -10,7 +10,7 @@ class Command(BaseCommand):
     help = 'Test simple sans WhatsApp'
 
     def handle(self, *args, **options):
-        self.stdout.write('🧪 Test simple du système...')
+        self.stdout.write('[TEST] Test simple du systeme...')
         
         # Créer tableau de test
         tableau, created = Tableau.objects.get_or_create(
@@ -38,7 +38,7 @@ class Command(BaseCommand):
             }
         )
         
-        self.stdout.write(f'✅ Commande {commande.code} créée')
+        self.stdout.write(f'[OK] Commande {commande.code} creee')
         
         # Test reçu avance
         try:
@@ -46,18 +46,18 @@ class Command(BaseCommand):
             pdf_buffer = generer_recu_avance(commande)
             with open(f'recu_avance_simple.pdf', 'wb') as f:
                 f.write(pdf_buffer.getvalue())
-            self.stdout.write('✅ Reçu avance généré: recu_avance_simple.pdf')
+            self.stdout.write('[OK] Recu avance genere: recu_avance_simple.pdf')
         except Exception as e:
-            self.stdout.write(f'❌ Erreur reçu avance: {e}')
+            self.stdout.write(f'[ERR] Erreur recu avance: {e}')
         
         # Test reçu final
         try:
             pdf_buffer = generer_recu_final(commande)
             with open(f'recu_final_simple.pdf', 'wb') as f:
                 f.write(pdf_buffer.getvalue())
-            self.stdout.write('✅ Reçu final généré: recu_final_simple.pdf')
+            self.stdout.write('[OK] Recu final genere: recu_final_simple.pdf')
         except Exception as e:
-            self.stdout.write(f'❌ Erreur reçu final: {e}')
+            self.stdout.write(f'[ERR] Erreur recu final: {e}')
         
         # Test QR code
         commande.statut = Commande.Statut.PRETE
@@ -65,9 +65,9 @@ class Command(BaseCommand):
         
         try:
             qr = commande.qrcode
-            self.stdout.write(f'✅ QR Code: {qr.token}')
-            self.stdout.write(f'📱 URL QR: http://localhost:5173/qr/{qr.token}')
+            self.stdout.write(f'[OK] QR Code: {qr.token}')
+            self.stdout.write(f'[URL] URL QR: http://localhost:5173/qr/{qr.token}')
         except Exception as e:
-            self.stdout.write(f'❌ Erreur QR: {e}')
+            self.stdout.write(f'[ERR] Erreur QR: {e}')
         
-        self.stdout.write('🎯 Test terminé !')
+        self.stdout.write('[OK] Test termine !')

@@ -17,7 +17,7 @@ let isConnected = false
 let qrGenerated = false
 
 async function connectWhatsApp() {
-  console.log('\n🔵 Démarrage connexion WhatsApp...')
+  console.log('\n[START] Demarrage connexion WhatsApp...')
   
   const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 
@@ -32,7 +32,7 @@ async function connectWhatsApp() {
     
     if (qr && !qrGenerated) {
       qrGenerated = true
-      console.log('\n🔴🔴🔴 QR CODE REÇU - GÉNÉRATION IMAGE... 🔴🔴🔴')
+      console.log('\n[QR] QR CODE RECU - GENERATION IMAGE...')
       try {
         await QRCode.toFile('whatsapp-qr.png', qr, {
           width: 500,
@@ -42,12 +42,12 @@ async function connectWhatsApp() {
             light: '#F5F0E8'
           }
         })
-        console.log('✅ QR Code sauvegardé: whatsapp-qr.png')
-        console.log('📱 Ouvrez ce fichier et scannez-le avec WhatsApp')
+        console.log('[OK] QR Code sauvegarde: whatsapp-qr.png')
+        console.log('[INFO] Ouvrez ce fichier et scannez-le avec WhatsApp')
         console.log('   WhatsApp > Menu ⋮ > Appareils connectés > Connecter un appareil')
-        console.log('\n⏳ En attente de connexion...')
+        console.log('\n[WAIT] En attente de connexion...')
       } catch (err) {
-        console.error('❌ Erreur génération QR:', err)
+        console.error('[ERR] Erreur generation QR:', err)
       }
     }
 
@@ -63,8 +63,8 @@ async function connectWhatsApp() {
     }
 
     if (connection === 'open') {
-      console.log('\n✅✅✅ BOT WHATSAPP CONNECTÉ ! ✅✅✅')
-      console.log('📱 Le bot peut maintenant envoyer des messages')
+      console.log('\n[OK] [OK] [OK] BOT WHATSAPP CONNECTE ! [OK] [OK] [OK]')
+      console.log('[INFO] Le bot peut maintenant envoyer des messages')
       isConnected = true
     }
   })
@@ -147,7 +147,7 @@ app.post('/verifier-numero', async (req, res) => {
       res.json({ valide: false, exists: false })
     }
   } catch (err) {
-    console.error('❌ Erreur vérification:', err)
+    console.error('[ERR] Erreur verification:', err)
     res.status(500).json({ error: err.message })
   }
 })
@@ -158,7 +158,7 @@ app.get('/statut', (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`\n🤖 Bot WhatsApp API démarré sur port ${PORT}`)
-  console.log('⏳ Connexion à WhatsApp en cours...')
+  console.log(`\n[OK] Bot WhatsApp API demarre sur port ${PORT}`)
+  console.log('[WAIT] Connexion a WhatsApp en cours...')
   connectWhatsApp()
 })

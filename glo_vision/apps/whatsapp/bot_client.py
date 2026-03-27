@@ -90,7 +90,7 @@ def appeler_avec_rotation(endpoint, payload):
 
             if r.status_code in [200, 201]:
                 data = r.json()
-                logger.info(f"✅ Message envoyé via {canal['nom']}")
+                logger.info(f"[OK] Message envoye via {canal['nom']}")
                 return {'success': True, 'data': data, 'canal': canal['nom']}
 
             logger.warning(f"{canal['nom']} erreur {r.status_code}: {r.text}")

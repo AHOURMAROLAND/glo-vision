@@ -29,9 +29,9 @@ def generer_qr_whatsapp():
     output_file = "whatsapp-test-qr.png"
     img.save(output_file)
     
-    print(f"✅ QR Code généré: {output_file}")
-    print(f"📱 Scannez ce code pour tester WhatsApp")
-    print(f"🔗 URL encodée: {data}")
+    print(f"[OK] QR Code genere: {output_file}")
+    print(f"[INFO] Scannez ce code pour tester WhatsApp")
+    print(f"[URL] URL encodee: {data}")
     
     return output_file
 

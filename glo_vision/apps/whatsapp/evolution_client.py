@@ -86,10 +86,10 @@ class EvolutionAPIClient:
         )
         
         if result.get('key'):
-            logger.info(f"✅ Message envoyé à {number}")
+            logger.info(f"[OK] Message envoye a {number}")
             return {'success': True, 'id': result['key']['id']}
         else:
-            logger.error(f"❌ Échec envoi message: {result}")
+            logger.error(f"[ERR] Echec envoi message: {result}")
             return {'success': False, 'error': result.get('error', 'Unknown error')}
     
     def send_pdf(self, number, pdf_buffer, filename, caption=''):
@@ -118,10 +118,10 @@ class EvolutionAPIClient:
         )
         
         if result.get('key'):
-            logger.info(f"✅ PDF envoyé à {number}")
+            logger.info(f"[OK] PDF envoye a {number}")
             return {'success': True}
         else:
-            logger.error(f"❌ Échec envoi PDF: {result}")
+            logger.error(f"[ERR] Echec envoi PDF: {result}")
             return {'success': False, 'error': result.get('error')}
     
     def verify_number(self, number):

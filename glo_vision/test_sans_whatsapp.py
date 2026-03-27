@@ -18,13 +18,13 @@ from datetime import timedelta
 import uuid
 
 def test_complet_sans_whatsapp():
-    print("🧪 TEST COMPLET SANS WHATSAPP")
+    print("[TEST] TEST COMPLET SANS WHATSAPP")
     print("=" * 50)
     
     # 1. Créer commande
     tableau = Tableau.objects.first()
     if not tableau:
-        print("❌ Aucun tableau trouvé")
+        print("[ERR] Aucun tableau trouve")
         return
     
     commande = Commande.objects.create(
@@ -38,7 +38,7 @@ def test_complet_sans_whatsapp():
         montant_solde=50000,
         statut='EN_ATTENTE'
     )
-    print(f"✅ Commande créée: {commande.code}")
+    print(f"[OK] Commande creee: {commande.code}")
     
     # 2. Générer reçu avance
     try:
@@ -47,14 +47,14 @@ def test_complet_sans_whatsapp():
         filename = f"recu_avance_{commande.code}.pdf"
         with open(filename, 'wb') as f:
             f.write(pdf.getvalue())
-        print(f"✅ Reçu avance: {filename}")
+        print(f"[OK] Recu avance: {filename}")
     except Exception as e:
-        print(f"❌ Erreur reçu avance: {e}")
+        print(f"[ERR] Erreur recu avance: {e}")
     
     # 3. Passer à PAYEE_AVANCE
     commande.statut = Commande.Statut.PAYEE_AVANCE
     commande.save()
-    print("✅ Statut: PAYEE_AVANCE (notification WhatsApp échoue mais loggée)")
+    print("[OK] Statut: PAYEE_AVANCE (notification WhatsApp echoue mais loggee)")
     
     # 4. Passer à PRETE (génère QR)
     commande.statut = Commande.Statut.PRETE
@@ -62,10 +62,10 @@ def test_complet_sans_whatsapp():
     
     try:
         qr = commande.qrcode
-        print(f"✅ QR Code: {qr.token}")
-        print(f"📱 URL: http://localhost:5175/qr/{qr.token}")
+        print(f"[OK] QR Code: {qr.token}")
+        print(f"[URL] URL: http://localhost:5175/qr/{qr.token}")
     except Exception as e:
-        print(f"❌ Erreur QR: {e}")
+        print(f"[ERR] Erreur QR: {e}")
     
     # 5. Passer à SOLDEE
     commande.statut = Commande.Statut.SOLDEE
@@ -77,14 +77,14 @@ def test_complet_sans_whatsapp():
         filename = f"recu_final_{commande.code}.pdf"
         with open(filename, 'wb') as f:
             f.write(pdf.getvalue())
-        print(f"✅ Reçu final: {filename}")
+        print(f"[OK] Recu final: {filename}")
     except Exception as e:
-        print(f"❌ Erreur reçu final: {e}")
+        print(f"[ERR] Erreur recu final: {e}")
     
     print("\n" + "=" * 50)
-    print("🎯 TEST TERMINÉ!")
-    print("✅ Système fonctionnel (sans WhatsApp)")
-    print("📁 Fichiers générés dans le dossier glo_vision/")
+    print("[OK] TEST TERMINE!")
+    print("[OK] Systeme fonctionnel (sans WhatsApp)")
+    print("[FILES] Fichiers generes dans le dossier glo_vision/")
 
 if __name__ == "__main__":
     test_complet_sans_whatsapp()
