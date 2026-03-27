@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from .bot_client import verifier_numero
+from rest_framework.permissions import AllowAny, IsAdminUser
+from .bot_client import verifier_numero, statut_canaux
 
 class VerifierNumeroView(APIView):
     permission_classes = [AllowAny]
@@ -17,3 +17,11 @@ class VerifierNumeroView(APIView):
             'pseudo': result.get('pseudo', numero),
             'numero': numero,
         })
+
+
+class StatutCanauxView(APIView):
+    """Retourne le statut des 3 canaux Whapi"""
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response({'canaux': statut_canaux()})
