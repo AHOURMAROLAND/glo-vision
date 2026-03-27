@@ -4,7 +4,7 @@ from .models import Commande
 
 @receiver(post_save, sender=Commande)
 def commande_post_save(sender, instance, created, **kwargs):
-    from apps.whatsapp.green_api_client import envoyer_message, envoyer_pdf
+    from apps.whatsapp.bot_client import envoyer_message, envoyer_pdf
     from apps.whatsapp.messages import (
         msg_notif_admin,
         msg_recu_avance,
