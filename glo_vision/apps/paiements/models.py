@@ -26,7 +26,7 @@ class Paiement(models.Model):
         choices=Statut.choices,
         default=Statut.EN_ATTENTE
     )
-    token_paydunya = models.CharField(max_length=255, blank=True)
+    reference_paiement = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -28,7 +28,7 @@ class InitierPaiementView(APIView):
                 commande=commande,
                 type_paiement=Paiement.Type.AVANCE,
                 montant=commande.montant_avance,
-                token_paydunya=data.get('reference', ''),
+                reference_paiement=data.get('reference', ''),
             )
             return Response({
                 'payment_url': data.get('paymentUrl'),
@@ -58,7 +58,7 @@ class WebhookSendavaPayView(APIView):
                 commande = Commande.objects.get(code=externe)
                 paiement = Paiement.objects.get(
                     commande=commande,
-                    token_paydunya=reference
+                    reference_paiement=reference
                 )
                 paiement.statut = Paiement.Statut.SUCCES
                 paiement.save()
@@ -76,7 +76,7 @@ class WebhookSendavaPayView(APIView):
                 commande = Commande.objects.get(code=externe)
                 paiement = Paiement.objects.get(
                     commande=commande,
-                    token_paydunya=reference
+                    reference_paiement=reference
                 )
                 paiement.statut = Paiement.Statut.ECHEC
                 paiement.save()

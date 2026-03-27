@@ -5,6 +5,8 @@ const pino    = require('pino')
 const fs      = require('fs')
 const path    = require('path')
 
+const QRCode = require('qrcode')
+
 const app  = express()
 const PORT = process.env.BOT_PORT || 3001
 
@@ -12,32 +14,57 @@ app.use(express.json({ limit: '50mb' }))
 
 let sock = null
 let isConnected = false
+let qrGenerated = false
 
 async function connectWhatsApp() {
+  console.log('\n🔵 Démarrage connexion WhatsApp...')
+  
   const { state, saveCreds } = await useMultiFileAuthState('auth_info')
 
   sock = makeWASocket({
     auth:   state,
     logger: pino({ level: 'silent' }),
-    printQRInTerminal: true,
+    printQRInTerminal: false,
   })
 
-  sock.ev.on('connection.update', ({ connection, lastDisconnect, qr }) => {
-    if (qr) {
-      console.log('\n=== SCANNEZ CE QR CODE AVEC WHATSAPP ===')
-      qrcode.generate(qr, { small: true })
-      console.log('=========================================\n')
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update
+    
+    if (qr && !qrGenerated) {
+      qrGenerated = true
+      console.log('\n🔴🔴🔴 QR CODE REÇU - GÉNÉRATION IMAGE... 🔴🔴🔴')
+      try {
+        await QRCode.toFile('whatsapp-qr.png', qr, {
+          width: 500,
+          margin: 3,
+          color: {
+            dark: '#1A1A2E',
+            light: '#F5F0E8'
+          }
+        })
+        console.log('✅ QR Code sauvegardé: whatsapp-qr.png')
+        console.log('📱 Ouvrez ce fichier et scannez-le avec WhatsApp')
+        console.log('   WhatsApp > Menu ⋮ > Appareils connectés > Connecter un appareil')
+        console.log('\n⏳ En attente de connexion...')
+      } catch (err) {
+        console.error('❌ Erreur génération QR:', err)
+      }
     }
 
     if (connection === 'close') {
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
-      console.log('Connexion fermée — reconnexion:', shouldReconnect)
+      const statusCode = lastDisconnect?.error?.output?.statusCode
+      const shouldReconnect = statusCode !== DisconnectReason.loggedOut
+      console.log(`Connexion fermée (code: ${statusCode}) - Reconnexion: ${shouldReconnect}`)
       isConnected = false
-      if (shouldReconnect) connectWhatsApp()
+      qrGenerated = false
+      if (shouldReconnect) {
+        setTimeout(connectWhatsApp, 3000)
+      }
     }
 
     if (connection === 'open') {
-      console.log('✓ Bot WhatsApp connecté !')
+      console.log('\n✅✅✅ BOT WHATSAPP CONNECTÉ ! ✅✅✅')
+      console.log('📱 Le bot peut maintenant envoyer des messages')
       isConnected = true
     }
   })
@@ -112,20 +139,15 @@ app.post('/verifier-numero', async (req, res) => {
   if (!isConnected) return res.status(503).json({ error: 'Bot non connecté' })
 
   try {
-    const [result] = await sock.onWhatsApp(numero.replace(/\D/g, ''))
-    if (result?.exists) {
-      const info = await sock.fetchStatus(result.jid).catch(() => null)
-      res.json({
-        valide: true,
-        jid:    result.jid,
-        numero: numero,
-        pseudo: info?.status || numero,
-      })
+    const formatted = formatNumero(numero)
+    const [result] = await sock.onWhatsApp(formatted)
+    if (result) {
+      res.json({ valide: true, exists: true, jid: result.jid })
     } else {
-      res.json({ valide: false, numero })
+      res.json({ valide: false, exists: false })
     }
   } catch (err) {
-    console.error('Erreur vérification:', err)
+    console.error('❌ Erreur vérification:', err)
     res.status(500).json({ error: err.message })
   }
 })
@@ -137,5 +159,6 @@ app.get('/statut', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n🤖 Bot WhatsApp API démarré sur port ${PORT}`)
+  console.log('⏳ Connexion à WhatsApp en cours...')
   connectWhatsApp()
 })

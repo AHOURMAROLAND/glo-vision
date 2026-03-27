@@ -1,0 +1,44 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fond -->
+  <rect width="200" height="200" fill="#ffffff"/>
+  
+  <!-- Bordure dorée -->
+  <rect x="10" y="10" width="180" height="180" fill="none" stroke="#C4963A" stroke-width="2"/>
+  
+  <!-- Coins QR code (simplifié) -->
+  <g id="corner-pattern">
+    <rect x="20" y="20" width="30" height="30" fill="#1A1A2E"/>
+    <rect x="25" y="25" width="20" height="20" fill="#ffffff"/>
+    <rect x="30" y="30" width="10" height="10" fill="#1A1A2E"/>
+  </g>
+  
+  <use href="#corner-pattern" x="130" y="0"/>
+  <use href="#corner-pattern" x="0" y="130"/>
+  
+  <!-- Centre QR code -->
+  <rect x="85" y="85" width="30" height="30" fill="#1A1A2E"/>
+  <rect x="90" y="90" width="20" height="20" fill="#ffffff"/>
+  <rect x="95" y="95" width="10" height="10" fill="#1A1A2E"/>
+  
+  <!-- Pattern QR code (simplifié) -->
+  <g id="dot-pattern">
+    <rect x="60" y="40" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="70" y="40" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="80" y="50" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="90" y="60" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="50" y="70" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="60" y="80" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="120" y="50" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="130" y="60" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="140" y="70" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="50" y="120" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="60" y="130" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="70" y="140" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="120" y="120" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="130" y="130" width="5" height="5" fill="#1A1A2E"/>
+    <rect x="140" y="140" width="5" height="5" fill="#1A1A2E"/>
+  </g>
+  
+  <!-- Texte -->
+  <text x="100" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8B7355">GLO-VISION-QR</text>
+</svg>
