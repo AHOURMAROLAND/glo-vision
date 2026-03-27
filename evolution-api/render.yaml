@@ -20,10 +20,6 @@
         {
           "key": "DATABASE_ENABLED",
           "value": "false"
-        },
-        {
-          "key": "DATABASE_PROVIDER",
-          "value": "postgresql"
         }
       ],
       "disk": {
